@@ -1,6 +1,6 @@
 # Catalyst | Node.js API
 
-This is the repo for the Not-Equal Catalyst's API.
+This is the repo for Not-Equal Catalyst's API.
 It is a [ChowChow](https://www.npmjs.com/package/@robb_j/chowchow) app,
 using [node.js](https://nodejs.org) & [express](https://expressjs.com/),
 written in [TypeScript](https://www.typescriptlang.org/)
@@ -56,7 +56,7 @@ The endpoints follow a meta-data envelope, where `data` is the endpoint payload:
 
 To develop on this repo you will need to have [Docker](https://www.docker.com/) and
 [node.js](https://nodejs.org) installed on your dev machine and have an understanding of them.
-This guide assumes you are on macOS, but equivalent commands are available.
+This guide assumes you have the repo checked out and are on macOS, but equivalent commands are available.
 You will also need a Trello account which is used to pull the data from.
 
 You'll only need to follow this setup once for your dev machine.
@@ -178,7 +178,7 @@ A slight nuance is that it will replace a preceding `v` in tag names, formatting
 # Deploy a new version of the CLI
 npm version # major | minor | patch
 git push --tags
-open https://openlab.ncl.ac.uk/gitlab/catalyst/node-api/container_registry
+open https://openlab.ncl.ac.uk/gitlab/catalyst/node-api/pipelines
 ```
 
 ### Using the image
@@ -188,14 +188,12 @@ The API runs on port `3000` inside its container, so you'll need to map that for
 
 Here's an example with docker-compose:
 
+> For more info see [catalyst-example-stack](https://github/com/unplatform/catalyst-example-stack)
+
 ```yml
 version: '3'
 
 services:
-  redis:
-    image: redis:4-alpine
-    restart: unless-stopped
-
   node-api:
     image: openlab.ncl.ac.uk:4567/catalyst/node-api:0.2.0
     restart: unless-stopped
@@ -203,7 +201,7 @@ services:
       - 3000:3000
     environment:
       WEB_URL: https://catalyst.not-equal.tech
-      REDIS_URL: redis://redis
+      REDIS_URL: redis://your_redis_url
       LOG_LEVEL: info
 ```
 
