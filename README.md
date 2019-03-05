@@ -231,6 +231,10 @@ There are 3 endpoints
 | `GET: /projects` | Retrieve projects from the redis database         |
 | `GET: /browse`   | Generate browsing modes, populated with projects  |
 
-## Future Work
+## Future work
 
-> Coming Soon
+> Coming soon
+
+---
+
+> The code on https://github.com/unplatform/catalyst-node-api is a mirror of https://openlab.ncl.ac.uk/gitlab/catalyst/node-api
