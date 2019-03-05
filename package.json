@@ -1,11 +1,11 @@
 {
-  "name": "@robb_j/create-node",
+  "name": "@openlab/catalyst-node-api",
   "private": true,
   "version": "0.2.0",
-  "description": "",
+  "description": "A ChowChow API to serve projects over HTTP using JSON",
   "main": "src/index.js",
   "types": "dist/index.d.ts",
-  "repository": "robb-j/ts-node-base",
+  "repository": "unplatform/catalyst-node-api",
   "author": "Rob Anderson (https://r0b.io)",
   "license": "MIT",
   "scripts": {
@@ -17,9 +17,13 @@
     "start": "node -r dotenv/config dist/server.js",
     "test": "jest",
     "dev": "NODE_ENV=development nodemon -w src -e ts -x 'npx ts-node -r dotenv/config' src/server.ts",
-    "redis": "docker run -it --rm --name dev_redis -p 6379:6379 redis:4-alpine"
+    "gen-readme-toc": "npx @robb_j/md-toc -i"
   },
-  "keywords": [],
+  "keywords": [
+    "not-equal-catalyst",
+    "chowchow",
+    "api"
+  ],
   "engines": {
     "node": ">=8"
   },
@@ -34,6 +38,7 @@
     "valid-env": "^0.1.3"
   },
   "devDependencies": {
+    "@robb_j/md-toc": "^0.2.2",
     "@types/cors": "^2.8.4",
     "@types/jest": "^24.0.6",
     "@types/node": "^11.9.4",

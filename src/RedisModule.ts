@@ -5,14 +5,17 @@ export type RedisContext = {
   redis: RedisClient
 }
 
+/** A ChowChow module to connect to and attach a redis client to the ctx */
 export class RedisModule implements Module {
-  app: ChowChow = null as any
-  client: RedisClient = null as any
+  app!: ChowChow
+  client!: RedisClient
 
+  /** Create a RedisModule with a redis uri string */
   constructor(public url: string) {}
 
   checkEnvironment(): void {}
 
+  /** Setup the module by creating and connecting a redis client */
   async setupModule() {
     this.client = createClient(this.url)
     await new Promise((resolve, reject) => {
@@ -21,12 +24,14 @@ export class RedisModule implements Module {
     })
   }
 
+  /** Clear the module by quitting the redis client */
   async clearModule() {
-    return new Promise(resolve => this.client.quit(() => resolve()))
+    this.client.quit()
   }
 
   extendExpress(): void {}
 
+  /** Extend the context by adding the client */
   extendEndpointContext(): RedisContext {
     return { redis: this.client }
   }

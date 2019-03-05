@@ -11,24 +11,29 @@ import { RouteContext } from './types'
 
 // App entrypoint
 ;(async () => {
+  // Ensure required environment variables are set or exit(1)
   validateEnv(['WEB_URL', 'REDIS_URL'])
 
+  // Create our chowchow app and apply modules
   let chow = ChowChow.create<RouteContext>()
     .use(new JsonEnvelopeModule())
     .use(new LoggerModule({ path: 'logs' }))
     .use(new RedisModule(process.env.REDIS_URL!))
 
+  // Setup cors middleware
   chow.applyMiddleware(app => {
     let origin = [process.env.WEB_URL!]
     app.use(cors({ origin }))
   })
 
+  // Add routes to our endpoints
   chow.applyRoutes((app, r) => {
     app.get('/', r(routes.hello))
     app.get('/projects', r(routes.projects))
     app.get('/browse', r(routes.browse))
   })
 
+  // Start the app up
   await chow.start()
   console.log('Listening on :3000')
 })()

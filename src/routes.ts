@@ -1,40 +1,11 @@
-import { RouteContext } from './types'
+import {
+  RouteContext,
+  Project,
+  BrowseMode,
+  BrowseModeWithProjects
+} from './types'
 import { RedisClient } from 'redis'
 import shuffleArray from 'shuffle-array'
-
-type Relation = {
-  name: string
-  type: string
-}
-
-type Project = {
-  id: string
-  name: string
-  desc: string
-  dateCreated: Date
-  dateLastActivity: Date
-  category?: Relation
-  themes: Relation[]
-  needs: Relation[]
-}
-
-type BrowseType =
-  | 'category'
-  | 'theme'
-  | 'need'
-  | 'newest'
-  | 'oldest'
-  | 'recentUpdate'
-  | 'random'
-
-type BrowseMode = {
-  type: BrowseType
-  filter?: string
-}
-
-type BrowseModeWithProjects = BrowseMode & {
-  projects: Project[]
-}
 
 /** Unpack a project, hydrating it's dates */
 function unpackProject(project: Project) {

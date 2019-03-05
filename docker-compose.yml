@@ -1,0 +1,24 @@
+#
+# A docker compose file to spin up a redis and put projects into it
+# Used for development
+#
+
+version: '3'
+
+services:
+  # A data store for projects, lightweight and stored in memory
+  redis:
+    image: redis:4-alpine
+    restart: unless-stopped
+    ports:
+      - 6379:6379
+  
+  # Run the scraper once at startup
+  one-time-scraper:
+    image: openlab.ncl.ac.uk:4567/catalyst/trello-scraper:0.3.0
+    env_file: .env
+    depends_on:
+      - redis
+    environment:
+      REDIS_URL: redis://redis
+    command: fetch --verbose
