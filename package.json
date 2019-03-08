@@ -1,7 +1,7 @@
 {
   "name": "@openlab/catalyst-node-api",
   "private": true,
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "A ChowChow API to serve projects over HTTP using JSON",
   "main": "src/index.js",
   "types": "dist/index.d.ts",
