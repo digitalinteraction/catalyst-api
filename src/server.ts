@@ -31,6 +31,7 @@ import { RouteContext } from './types'
     app.get('/', r(routes.hello))
     app.get('/projects', r(routes.projects))
     app.get('/browse', r(routes.browse))
+    app.get('/content', r(routes.content))
   })
 
   // Start the app up

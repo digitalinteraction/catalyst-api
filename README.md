@@ -221,13 +221,14 @@ There are some required and some option environment variables, shown below.
 
 ### Endpoints
 
-There are 3 endpoints
+There are 4 endpoints
 
 | Route            | Description                                       |
 | ---------------- | ------------------------------------------------- |
 | `GET: /`         | An endpoint to let you know everything is working |
 | `GET: /projects` | Retrieve projects from the redis database         |
 | `GET: /browse`   | Generate browsing modes, populated with projects  |
+| `GET: /content`  | Retrieve site config from the redis database      |
 
 ## Future work
 

@@ -18,18 +18,30 @@ function limitSet<T>(set: Set<T>, limit: number): Array<T> {
   return shuffleArray(Array.from(set)).slice(0, limit)
 }
 
-/** Fetch projects from redis and unpack them */
-export async function getProjects(redis: RedisClient) {
-  return new Promise<Project[]>((resolve, reject) => {
-    redis.get('projects', (err, data) => {
-      if (err) reject(err)
-      else {
-        let projects = JSON.parse(data) as Project[]
-        projects.forEach(unpackProject)
-        resolve(projects)
+/** Get a key from redis and parse JSON */
+function redisGetJson(redis: RedisClient, key: string): Promise<any> {
+  return new Promise((resolve, reject) => {
+    redis.get(key, (err, data) => {
+      try {
+        if (err) throw err
+        resolve(JSON.parse(data))
+      } catch (error) {
+        reject(error)
       }
     })
   })
+}
+
+/** Fetch projects from redis and unpack them */
+export async function getProjects(redis: RedisClient) {
+  const projects = await redisGetJson(redis, 'projects')
+  projects.forEach(unpackProject)
+  return projects
+}
+
+/** Fetch the site config from redis */
+export async function getContent(redis: RedisClient) {
+  return redisGetJson(redis, 'content')
 }
 
 /** Apply a browsing mode by fetching it's projects */
@@ -148,6 +160,13 @@ export async function browse({ sendData, redis }: RouteContext) {
 
   // send them to the client
   sendData(browsing)
+}
+
+//
+// GET /content ~ Fetch the content inferred from the trello board
+//
+export async function content({ sendData, redis }: RouteContext) {
+  sendData(await getContent(redis))
 }
 
 export async function notFound({ sendFail }: RouteContext) {
