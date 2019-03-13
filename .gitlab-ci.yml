@@ -10,7 +10,7 @@ services:
   - docker:dind
 
 before_script:
-  - sh /vault-docker-login.sh
+  - ash /vault-docker-login.sh
 
 build:
   tags:
