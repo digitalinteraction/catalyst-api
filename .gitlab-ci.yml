@@ -4,13 +4,13 @@
 #        or `git config --global push.followTags true`
 #
 
-image: docker:latest
+image: robbj/ci:vault-1.0.0
 
 services:
   - docker:dind
 
 before_script:
-  - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin $CI_REGISTRY
+  - sh /vault-docker-login.sh
 
 build:
   tags:
@@ -18,6 +18,6 @@ build:
   only:
     - tags
   script:
-    - IMAGE=$CI_REGISTRY_IMAGE:`echo $CI_COMMIT_TAG | sed 's/^v//'`
+    - IMAGE=openlab/catalyst-api:`echo $CI_COMMIT_TAG | sed 's/^v//'`
     - docker build --pull -t $IMAGE .
     - docker push $IMAGE
