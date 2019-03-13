@@ -4,7 +4,7 @@
 #        or `git config --global push.followTags true`
 #
 
-image: robbj/ci:vault-1.0.1
+image: robbj/ci:vault-1.0.2
 
 services:
   - docker:dind
