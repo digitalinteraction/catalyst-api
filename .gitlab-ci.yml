@@ -15,6 +15,9 @@ build:
   only:
     - tags
   script:
+    - ls
+    - pwd
+    - ls /
     - ash /vault-docker-login.sh
     - IMAGE=openlab/catalyst-api:`echo $CI_COMMIT_TAG | sed 's/^v//'`
     - docker build --pull -t $IMAGE .
