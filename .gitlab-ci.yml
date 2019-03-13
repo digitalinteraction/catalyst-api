@@ -8,7 +8,7 @@ services:
   - docker:dind
 
 build:
-  image: robbj/ci:vault-1.0.3
+  image: robbj/ci:vault-1.0.4
   tags:
     - dind
   only:
