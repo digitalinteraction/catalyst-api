@@ -8,7 +8,7 @@ services:
   - docker:dind
 
 variables:
-  IMAGE_NAME: openlab/catalyst-api
+  IMAGE_NAME: openlab/catalyst-node-api
 
 build:
   image: robbj/ci:vault-1.0.0
