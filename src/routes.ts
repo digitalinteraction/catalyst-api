@@ -128,27 +128,33 @@ export async function browse({ sendData, redis }: RouteContext) {
     for (let theme of project.themes) themes.add(theme.name)
   }
 
+  //
   // Start generating the browsing modes
+  //
   // Starting with the different sorting methods
+  //
+  // NOTE: We aren't using temporal modes as it doesn't currently make sense
+  //       for the first deployment i.e. newest, oldest, recentUpdate.
+  //       This is where they would be pushed in
   const modes = Array.from<BrowseMode>([
-    { type: 'newest' },
-    { type: 'oldest' },
-    { type: 'random' },
-    { type: 'recentUpdate' }
+    // { type: 'newest' },
+    // { type: 'oldest' },
+    // { type: 'recentUpdate' },
+    { type: 'random' }
   ])
 
-  // Push in upto 3 randomized categories
-  for (let category of limitSet(categories, 3)) {
+  // Push in some randomized categories
+  for (let category of limitSet(categories, 5)) {
     modes.push({ type: 'category', filter: category })
   }
 
-  // Push in upto 3 randomized needs
-  for (let need of limitSet(needs, 3)) {
+  // Push in some randomized needs
+  for (let need of limitSet(needs, 5)) {
     modes.push({ type: 'need', filter: need })
   }
 
-  // Push in upto 3 randomized themes
-  for (let theme of limitSet(themes, 3)) {
+  // Push in some randomized themes
+  for (let theme of limitSet(themes, 5)) {
     modes.push({ type: 'theme', filter: theme })
   }
 
