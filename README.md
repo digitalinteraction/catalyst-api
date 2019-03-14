@@ -13,7 +13,7 @@ It serves data from a [redis](https://redis.io/) database, which is put there by
 
 ## Table of Contents
 
-- [What is this?](#what-is-this%3F)
+- [What is this](#what-is-this)
 - [Development](#development)
   - [Setup](#setup)
   - [Regular use](#regular-use)
@@ -30,7 +30,7 @@ It serves data from a [redis](https://redis.io/) database, which is put there by
 
 <!-- toc-tail -->
 
-## What is this?
+## What is this
 
 This repo provides a http API to fetch projects and generate browsing methods.
 Projects are retrieved from a redis instances and are sent to the client as JSON.
