@@ -27,7 +27,20 @@ export class MonkModule implements Module {
   }
 
   async setupModule() {
-    this.db = monk(process.env.MONGO_URL!)
+    // Start a connection
+    const connection = monk(process.env.MONGO_URL!)
+
+    // Monk doesn't play nicely with async/await
+    // I think it's because it always has a #then() which ends up recursive
+    // IMPORTANT -  resolve this promise **without** a value
+    await new Promise<any>((resolve, reject) =>
+      connection
+        .then(() => resolve())
+        .catch(err => reject(new Error(`Mongo error - ${err.message}`)))
+    )
+
+    // Now assign the database connection
+    this.db = connection
   }
 
   clearModule() {}

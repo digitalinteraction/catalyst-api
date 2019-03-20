@@ -16,50 +16,55 @@ import { SocketedChow } from './SocketedChow'
 
 // App entrypoint
 ;(async () => {
-  // Ensure required environment variables are set or exit(1)
-  validateEnv(['WEB_URL', 'REDIS_URL'])
+  try {
+    // Ensure required environment variables are set or exit(1)
+    validateEnv(['WEB_URL', 'REDIS_URL'])
 
-  // Create our custom chowchow app
-  // -> not chained becuse #use doesn't preserve the type
-  const chow = SocketedChow.create<RouteContext, SocketContext>()
+    // Create our custom chowchow app
+    // -> not chained becuse #use doesn't preserve the type
+    const chow = SocketedChow.create<RouteContext, SocketContext>()
 
-  // Create our chowchow app and apply modules
-  chow
-    .use(new JsonEnvelopeModule({ handleErrors: true }))
-    .use(new LoggerModule({ path: 'logs' }))
-    .use(new RedisModule(process.env.REDIS_URL!))
-    .use(new MonkModule())
+    // Create our chowchow app and apply modules
+    chow
+      .use(new JsonEnvelopeModule({ handleErrors: true }))
+      .use(new LoggerModule({ path: 'logs' }))
+      .use(new RedisModule(process.env.REDIS_URL!))
+      .use(new MonkModule())
 
-  // Apply express middleware
-  chow.applyMiddleware(app => {
-    // Setup cors
-    let origin = [process.env.WEB_URL!]
-    app.use(cors({ origin }))
+    // Apply express middleware
+    chow.applyMiddleware(app => {
+      // Setup cors
+      let origin = [process.env.WEB_URL!]
+      app.use(cors({ origin }))
 
-    // Parse json bodies
-    app.use(express.json())
-  })
+      // Parse json bodies
+      app.use(express.json())
+    })
 
-  // Add routes to our endpoints
-  chow.applyRoutes((app, r) => {
-    app.get('/', r(routes.hello))
-    app.get('/projects', r(routes.projects))
-    app.get('/browse', r(routes.browse))
-    app.get('/content', r(routes.content))
-    app.get('/stats', r(routes.stats))
+    // Add routes to our endpoints
+    chow.applyRoutes((app, r) => {
+      app.get('/', r(routes.hello))
+      app.get('/projects', r(routes.projects))
+      app.get('/browse', r(routes.browse))
+      app.get('/content', r(routes.content))
+      app.get('/stats', r(routes.stats))
 
-    if (process.env.NODE_ENV === 'development') {
-      app.get('/dev/stats', r(routes.devStats))
-    }
-    // app.get('/events', r(routes.events))
-  })
+      if (process.env.NODE_ENV === 'development') {
+        app.get('/dev/stats', r(routes.devStats))
+      }
+      // app.get('/events', r(routes.events))
+    })
 
-  // Setup the web socket server
-  chow.registerSocket('echo', sockets.echo)
-  chow.registerSocket('page_view', sockets.pageView)
-  chow.registerSocket('project_action', sockets.projectAction)
+    // Setup the web socket server
+    chow.registerSocket('echo', sockets.echo)
+    chow.registerSocket('page_view', sockets.pageView)
+    chow.registerSocket('project_action', sockets.projectAction)
 
-  // Start the app up
-  await chow.start()
-  console.log('Listening on :3000')
+    // Start the app up
+    await chow.start()
+    console.log('Listening on :3000')
+  } catch (error) {
+    console.log('Failed to start:', error.message)
+    process.exit(1)
+  }
 })()
