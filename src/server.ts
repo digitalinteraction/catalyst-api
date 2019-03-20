@@ -25,7 +25,7 @@ import { SocketedChow } from './SocketedChow'
 
   // Create our chowchow app and apply modules
   chow
-    .use(new JsonEnvelopeModule())
+    .use(new JsonEnvelopeModule({ handleErrors: true }))
     .use(new LoggerModule({ path: 'logs' }))
     .use(new RedisModule(process.env.REDIS_URL!))
     .use(new MonkModule())
@@ -46,12 +46,18 @@ import { SocketedChow } from './SocketedChow'
     app.get('/projects', r(routes.projects))
     app.get('/browse', r(routes.browse))
     app.get('/content', r(routes.content))
+    app.get('/stats', r(routes.stats))
+
+    if (process.env.NODE_ENV === 'development') {
+      app.get('/dev/stats', r(routes.devStats))
+    }
     // app.get('/events', r(routes.events))
   })
 
   // Setup the web socket server
   chow.registerSocket('echo', sockets.echo)
-  chow.registerSocket('track', sockets.track)
+  chow.registerSocket('page_view', sockets.pageView)
+  chow.registerSocket('project_action', sockets.projectAction)
 
   // Start the app up
   await chow.start()

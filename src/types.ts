@@ -59,3 +59,6 @@ export type BrowseMode = {
 export type BrowseModeWithProjects = BrowseMode & {
   projects: Project[]
 }
+
+/** An object with string keys and a generic value */
+export type SimpleObject<T> = { [idx: string]: T }

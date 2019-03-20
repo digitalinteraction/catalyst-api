@@ -1,9 +1,28 @@
+#
+# Config for https://github.com/robb-j/akita
+# -> A CLI for testing web sockets
+#
+
 url: ws://localhost:3000
 
 messages:
   hello:
     type: echo
     body: Wazzup!
-  track:
-    type: track
-    event: test_event
+  
+  viewHome:
+    type: page_view
+    path: /
+  
+  viewAbout:
+    type: page_view
+    path: /about
+  
+  viewProject:
+    type: page_view
+    path: /project/123456-abcdefg
+    
+  linkClick:
+    type: project_action
+    project: 123456-abcdef
+    link: mailto://geoff.testington@ncl.ac.uk

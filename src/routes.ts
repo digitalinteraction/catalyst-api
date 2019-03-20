@@ -2,12 +2,12 @@ import {
   RouteContext,
   Project,
   BrowseMode,
-  BrowseModeWithProjects
+  BrowseModeWithProjects,
+  SimpleObject
 } from './types'
+
 import { RedisClient } from 'redis'
 import shuffleArray from 'shuffle-array'
-// import { superstruct } from 'superstruct'
-// import WebSocket from 'ws'
 
 /** Unpack a project, hydrating it's dates */
 function unpackProject(project: Project) {
@@ -171,28 +171,79 @@ export async function browse({ sendData, redis }: RouteContext) {
 }
 
 //
-// POST /events ~ Get tracking information
+// GET /dev/stats ~ Get all analytics stats (only NODE_ENV=development)
 //
-// export async function track({ req, sendData, mongo }: RouteContext) {
-//   const struct = superstruct({
-//     types: {
-//       eventType: value => ['page_view', 'project_view', 'project_interaction'].includes(value)
-//     }
-//   })
-//
-//   const validateEvent = struct({
-//     type:
-//   })
-//
-//   sendData(req.body)
-// }
+export async function devStats({ sendData, mongo }: RouteContext) {
+  let [pageViews, projectActions] = await Promise.all([
+    mongo.get('page_views').find({}),
+    mongo.get('project_actions').find({})
+  ])
+  sendData({ pageViews, projectActions })
+}
 
-// export const events = (wss: WebSocket.Server) => {
-//   return ({ req, sendData, mongo }: RouteContext) => {
 //
-//     sendData(req.body)
-//   }
-// }
+// GET /stats ~ Get analytics about the site
+//
+export async function stats({ sendData, mongo }: RouteContext) {
+  const PageView = mongo.get('page_views')
+  const ProjectAction = mongo.get('project_actions')
+
+  // Perform all queries in parallel
+  const [rawPageViews, rawProjectArrivals, rawInteractions] = await Promise.all(
+    [
+      // Get the number of views per page
+      PageView.aggregate([
+        { $group: { _id: '$path', count: { $sum: 1 } } },
+        { $project: { _id: 0, path: '$_id', count: '$count' } }
+      ]),
+
+      // Get how people arrived at a project from
+      PageView.aggregate([
+        {
+          $match: {
+            path: { $regex: /^\/project\/.+$/ }
+          }
+        },
+        {
+          $lookup: {
+            from: 'page_views',
+            localField: 'previous',
+            foreignField: '_id',
+            as: 'previous'
+          }
+        }
+      ]),
+
+      // Get the interactions per project
+      ProjectAction.aggregate([
+        { $group: { _id: '$project', count: { $sum: 1 } } },
+        { $project: { _id: 0, project: '$_id', count: '$count' } }
+      ])
+    ]
+  )
+
+  // Reduce page views to an object of { url: count }
+  const pageViews: SimpleObject<number> = {}
+  for (let view of rawPageViews) {
+    pageViews[view.path] = view.count
+  }
+
+  // Reduce project arrivals to an object of { source: count }
+  const projectSources: SimpleObject<number> = {}
+  for (let view of rawProjectArrivals) {
+    const key = view.previous[0] ? view.previous[0].path : 'direct'
+    projectSources[key] = (projectSources[key] || 0) + 1
+  }
+
+  // Reduce interactions to an object of { project: count }
+  const interactions: SimpleObject<number> = {}
+  for (let action of rawInteractions) {
+    interactions[action.project] = action.count
+  }
+
+  // Send back the stats data
+  sendData({ pageViews, projectSources, interactions })
+}
 
 //
 // GET /content ~ Fetch the content inferred from the trello board

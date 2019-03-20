@@ -34,6 +34,7 @@ It serves data from a [redis](https://redis.io/) database, which is put there by
 
 This repo provides a http API to fetch projects and generate browsing methods.
 Projects are retrieved from a redis instances and are sent to the client as JSON.
+Lightweight analytics are written to a mongo database.
 
 The endpoints follow a meta-data envelope, where `data` is the endpoint payload:
 
@@ -202,6 +203,7 @@ services:
     environment:
       WEB_URL: https://catalyst.not-equal.tech
       REDIS_URL: redis://your_redis_url
+      MONGO_URL: mongodb://your_mongo_url
       LOG_LEVEL: info
 ```
 
@@ -213,6 +215,7 @@ There are some required and some option environment variables, shown below.
 | --------- | ---------------------------------------------------------- |
 | WEB_URL   | **required** Where the web ui is, used to set cors headers |
 | REDIS_URL | **required** The connection details of the redis database  |
+| MONGO_URL | **required** The connection details of the mongo database  |
 | LOG_LEVEL | (optional) How much logging to generate                    |
 
 > For information about LOG_LEVEL see [chowchow-logger](https://github.com/robb-j/chowchow-logger#environment-variables).
@@ -221,7 +224,7 @@ There are some required and some option environment variables, shown below.
 
 ### Endpoints
 
-There are 4 endpoints
+There are 5 endpoints
 
 | Route            | Description                                       |
 | ---------------- | ------------------------------------------------- |
@@ -229,6 +232,19 @@ There are 4 endpoints
 | `GET: /projects` | Retrieve projects from the redis database         |
 | `GET: /browse`   | Generate browsing modes, populated with projects  |
 | `GET: /content`  | Retrieve site config from the redis database      |
+| `GET: /stats`    | Get analytics stats about site usage              |
+
+### Sockets
+
+The site uses sockets for anonymous analytics.
+A JSON payload is expected with a root level `type` which is used to route the socket to a handler.
+Any message with unknown type or incorrect body is silently ignored.
+
+| Type             | Description                                                |
+| ---------------- | ---------------------------------------------------------- |
+| `echo`           | A test socket which echo's back your body (sans type)      |
+| `page_view`      | Register a page was viewed, params: `path`                 |
+| `project_action` | Register an action on a project, params: `project`, `link` |
 
 ## Future work
 

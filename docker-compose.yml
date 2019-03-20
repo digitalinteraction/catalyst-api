@@ -19,9 +19,10 @@ services:
     restart: unless-stopped
     ports: 
       - 27017:27017
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: secret
+    # environment:
+    #   MONGO_INITDB_ROOT_USERNAME: root
+    #   MONGO_INITDB_ROOT_PASSWORD: secret
+    #   MONGO_INITDB_DATABASE: catalyst
   
   # Run the scraper once at startup
   one-time-scraper:
