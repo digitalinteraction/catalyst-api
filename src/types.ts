@@ -3,12 +3,23 @@ import { LoggerContext } from '@robb_j/chowchow-logger'
 import { JsonEnvelopeContext } from '@robb_j/chowchow-json-envelope'
 
 import { RedisContext } from './RedisModule'
+import { MonkContext } from './MonkModule'
+import { BaseSocketContext, SocketServerContext } from './SocketedChow'
 
 /** Our custom ChowChow context */
 export type RouteContext = BaseContext &
   LoggerContext &
   JsonEnvelopeContext &
-  RedisContext
+  RedisContext &
+  SocketServerContext &
+  MonkContext
+
+/** Our custom context for sockets */
+export type SocketContext = BaseSocketContext &
+  LoggerContext &
+  JsonEnvelopeContext &
+  RedisContext &
+  MonkContext
 
 /** A trello-card relation */
 export type Relation = {

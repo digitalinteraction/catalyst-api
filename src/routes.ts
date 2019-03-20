@@ -6,6 +6,8 @@ import {
 } from './types'
 import { RedisClient } from 'redis'
 import shuffleArray from 'shuffle-array'
+// import { superstruct } from 'superstruct'
+// import WebSocket from 'ws'
 
 /** Unpack a project, hydrating it's dates */
 function unpackProject(project: Project) {
@@ -167,6 +169,30 @@ export async function browse({ sendData, redis }: RouteContext) {
   // send them to the client
   sendData(browsing)
 }
+
+//
+// POST /events ~ Get tracking information
+//
+// export async function track({ req, sendData, mongo }: RouteContext) {
+//   const struct = superstruct({
+//     types: {
+//       eventType: value => ['page_view', 'project_view', 'project_interaction'].includes(value)
+//     }
+//   })
+//
+//   const validateEvent = struct({
+//     type:
+//   })
+//
+//   sendData(req.body)
+// }
+
+// export const events = (wss: WebSocket.Server) => {
+//   return ({ req, sendData, mongo }: RouteContext) => {
+//
+//     sendData(req.body)
+//   }
+// }
 
 //
 // GET /content ~ Fetch the content inferred from the trello board

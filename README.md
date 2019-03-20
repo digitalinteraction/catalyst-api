@@ -77,7 +77,7 @@ open https://github.com/unplatform/catalyst-trello-scraper#setup
 These are the commands you'll regularly run to develop the API, in no particular order.
 
 ```bash
-# Start up a redis instance in docker and seed it with projects
+# Start up a redis instance seeded it with projects and mongo for analytics
 # -> Run this in a new terminal tab
 # -> Stop this with a Ctrl+C
 # -> See `docker-compose.yml` for how it works

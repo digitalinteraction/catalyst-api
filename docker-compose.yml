@@ -13,6 +13,16 @@ services:
     ports:
       - 6379:6379
   
+  # A mongo database for analytics
+  mongo:
+    image: mongo:3.6-stretch
+    restart: unless-stopped
+    ports: 
+      - 27017:27017
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: secret
+  
   # Run the scraper once at startup
   one-time-scraper:
     image: openlab.ncl.ac.uk:4567/catalyst/trello-scraper:0.4.0

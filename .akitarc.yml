@@ -1,0 +1,9 @@
+url: ws://localhost:3000
+
+messages:
+  hello:
+    type: echo
+    body: Wazzup!
+  track:
+    type: track
+    event: test_event
