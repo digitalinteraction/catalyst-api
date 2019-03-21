@@ -20,9 +20,9 @@ messages:
   
   viewProject:
     type: page_view
-    path: /project/123456-abcdefg
+    path: /project/5c80fafc339c9d6d52b9529d
     
   linkClick:
     type: project_action
-    project: 123456-abcdef
+    project: 5c80fafc339c9d6d52b9529d
     link: mailto://geoff.testington@ncl.ac.uk

@@ -53,9 +53,9 @@ export async function pageView({ body, socket, mongo }: SocketContext) {
   const { path } = validate<PageView>(PageView, body)
 
   // Get the last page view for that session
-  const [last] = await mongo
+  const last = await mongo
     .get('page_views')
-    .find({ session: socket.id }, { $slice: -1 })
+    .findOne({ session: socket.id }, { sort: { date: -1 } })
 
   // Create a new page view that optionally references it
   await mongo.get('page_views').insert({
