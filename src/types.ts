@@ -2,8 +2,8 @@ import { BaseContext } from '@robb_j/chowchow'
 import { LoggerContext } from '@robb_j/chowchow-logger'
 import { JsonEnvelopeContext } from '@robb_j/chowchow-json-envelope'
 
-import { RedisContext } from './RedisModule'
-import { MonkContext } from './MonkModule'
+import { RedisContext } from './modules/RedisModule'
+import { MonkContext } from './modules/MonkModule'
 import { BaseSocketContext, SocketServerContext } from './SocketedChow'
 
 /** Our custom ChowChow context */
@@ -60,5 +60,11 @@ export type BrowseModeWithProjects = BrowseMode & {
   projects: Project[]
 }
 
-/** An object with string keys and a generic value */
-export type SimpleObject<T> = { [idx: string]: T }
+export interface PageView {
+  path: string
+}
+
+export interface ProjectAction {
+  project: string
+  link: string
+}

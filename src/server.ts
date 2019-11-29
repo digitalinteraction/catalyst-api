@@ -6,8 +6,8 @@ import validateEnv from 'valid-env'
 // import { ChowChow, BaseContext } from '@robb_j/chowchow'
 import { LoggerModule } from '@robb_j/chowchow-logger'
 import { JsonEnvelopeModule } from '@robb_j/chowchow-json-envelope'
-import { RedisModule } from './RedisModule'
-import { MonkModule } from './MonkModule'
+import { RedisModule } from './modules/RedisModule'
+import { MonkModule } from './modules/MonkModule'
 
 import * as routes from './routes'
 import * as sockets from './sockets'
@@ -44,8 +44,10 @@ import { SocketedChow } from './SocketedChow'
     // Add routes to our endpoints
     chow.applyRoutes((app, r) => {
       app.get('/', r(routes.hello))
-      app.get('/projects', r(routes.projects))
-      app.get('/browse', r(routes.browse))
+      // app.get('/projects', r(routes.projects))
+      // app.get('/browse', r(routes.browse))
+      app.get('/data/cards', r(routes.listCards))
+      app.get('/data/cards', r(routes.listLabels))
       app.get('/content', r(routes.content))
       app.get('/stats', r(routes.stats))
 
