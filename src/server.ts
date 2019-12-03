@@ -47,7 +47,8 @@ import { SocketedChow } from './SocketedChow'
       // app.get('/projects', r(routes.projects))
       // app.get('/browse', r(routes.browse))
       app.get('/data/cards', r(routes.listCards))
-      app.get('/data/cards', r(routes.listLabels))
+      app.get('/data/labels', r(routes.listLabels))
+      app.get('/data/projects', r(routes.listProjects))
       app.get('/content', r(routes.content))
       app.get('/stats', r(routes.stats))
 
