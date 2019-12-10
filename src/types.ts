@@ -64,6 +64,11 @@ export interface PageView {
   path: string
 }
 
+export interface ClientError {
+  message: string
+  stack: string
+}
+
 export interface ProjectAction {
   project: string
   link: string

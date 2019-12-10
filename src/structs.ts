@@ -12,6 +12,11 @@ export const PageViewBody = struct({
   path: 'path'
 })
 
+export const ClientErrorBody = struct({
+  message: 'string',
+  stack: 'string'
+})
+
 export const ProjectActionBody = struct({
   project: 'string',
   link: 'string'

@@ -53,6 +53,7 @@ import { SocketedChow } from './SocketedChow'
       app.get('/stats', r(routes.stats))
 
       if (process.env.NODE_ENV === 'development') {
+        app.get('/dev/errors', r(routes.devErrors))
         app.get('/dev/stats', r(routes.devStats))
       }
       // app.get('/events', r(routes.events))
@@ -62,6 +63,7 @@ import { SocketedChow } from './SocketedChow'
     chow.registerSocket('echo', sockets.echo)
     chow.registerSocket('page_view', sockets.pageView)
     chow.registerSocket('project_action', sockets.projectAction)
+    chow.registerSocket('client_error', sockets.clientError)
 
     // Start the app up
     await chow.start()
