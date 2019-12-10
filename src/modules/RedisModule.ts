@@ -31,7 +31,10 @@ export class RedisModule implements Module {
       quit: promisify(client.quit).bind(client),
       on: client.on.bind(client),
       async getJson(key: string) {
-        return JSON.parse(await this.client.get(key))
+        const data: any = await new Promise((resolve, reject) => {
+          client.get(key, (err, data) => (err ? reject(err) : resolve(data)))
+        })
+        return JSON.parse(data)
       }
     } as any
   }

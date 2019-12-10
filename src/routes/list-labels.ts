@@ -1,5 +1,8 @@
 import { RouteContext } from '../types'
 
+//
+// GET /data/labels ~ get all labels
+//
 export default async ({ sendData, redis }: RouteContext) => {
-  sendData(redis.getJson('labels'))
+  sendData(await redis.getJson('labels'))
 }
