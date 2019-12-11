@@ -2,7 +2,7 @@ import { SocketContext, ClientError } from '../types'
 import { ClientErrorBody, validate } from '../structs'
 
 //
-// (type=page_view) ~ Register a page view
+// (type=client_error) ~ Register a page view
 //
 export default async ({ socket, body, mongo }: SocketContext) => {
   const { message, stack } = validate<ClientError>(ClientErrorBody, body)

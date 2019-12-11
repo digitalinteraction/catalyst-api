@@ -44,11 +44,8 @@ import { SocketedChow } from './SocketedChow'
     // Add routes to our endpoints
     chow.applyRoutes((app, r) => {
       app.get('/', r(routes.hello))
-      // app.get('/projects', r(routes.projects))
-      // app.get('/browse', r(routes.browse))
-      app.get('/data/cards', r(routes.listCards))
-      app.get('/data/labels', r(routes.listLabels))
-      app.get('/data/projects', r(routes.listProjects))
+      app.get('/cards', r(routes.listCards))
+      app.get('/labels', r(routes.listLabels))
       app.get('/content', r(routes.content))
       app.get('/stats', r(routes.stats))
 
@@ -56,7 +53,6 @@ import { SocketedChow } from './SocketedChow'
         app.get('/dev/errors', r(routes.devErrors))
         app.get('/dev/stats', r(routes.devStats))
       }
-      // app.get('/events', r(routes.events))
     })
 
     // Setup the web socket server
