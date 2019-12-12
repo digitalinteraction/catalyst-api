@@ -26,7 +26,7 @@
     "node": ">=8"
   },
   "dependencies": {
-    "@openlab/trello-client": "^0.1.0",
+    "@openlab/trello-client": "^0.1.1",
     "@robb_j/chowchow": "^0.6.2",
     "@robb_j/chowchow-json-envelope": "^0.2.3",
     "@robb_j/chowchow-logger": "^0.3.1",
