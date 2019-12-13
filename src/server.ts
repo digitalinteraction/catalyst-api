@@ -56,10 +56,12 @@ import { SocketedChow } from './SocketedChow'
     })
 
     // Setup the web socket server
-    chow.registerSocket('echo', sockets.echo)
-    chow.registerSocket('page_view', sockets.pageView)
-    chow.registerSocket('project_action', sockets.projectAction)
-    chow.registerSocket('client_error', sockets.clientError)
+    if (process.env.ENABLE_SOCKETS) {
+      chow.registerSocket('echo', sockets.echo)
+      chow.registerSocket('page_view', sockets.pageView)
+      chow.registerSocket('project_action', sockets.projectAction)
+      chow.registerSocket('client_error', sockets.clientError)
+    }
 
     // Start the app up
     await chow.start()
