@@ -211,12 +211,13 @@ services:
 
 There are some required and some option environment variables, shown below.
 
-| Variable  | Description                                                |
-| --------- | ---------------------------------------------------------- |
-| WEB_URL   | **required** Where the web ui is, used to set cors headers |
-| REDIS_URL | **required** The connection details of the redis database  |
-| MONGO_URL | **required** The connection details of the mongo database  |
-| LOG_LEVEL | (optional) How much logging to generate                    |
+| Variable       | Description                                                |
+| -------------- | ---------------------------------------------------------- |
+| WEB_URL        | **required** Where the web ui is, used to set cors headers |
+| REDIS_URL      | **required** The connection details of the redis database  |
+| MONGO_URL      | **required** The connection details of the mongo database  |
+| LOG_LEVEL      | (optional) How much logging to generate                    |
+| ENABLE_SOCKETS | (optional) Enable the websocket analytics server           |
 
 > For information about LOG_LEVEL see [chowchow-logger](https://github.com/robb-j/chowchow-logger#environment-variables).
 > Logs are written to `/app/logs` which is an internal volume by default,

@@ -6,8 +6,8 @@ import validateEnv from 'valid-env'
 // import { ChowChow, BaseContext } from '@robb_j/chowchow'
 import { LoggerModule } from '@robb_j/chowchow-logger'
 import { JsonEnvelopeModule } from '@robb_j/chowchow-json-envelope'
-import { RedisModule } from './RedisModule'
-import { MonkModule } from './MonkModule'
+import { RedisModule } from './modules/RedisModule'
+import { MonkModule } from './modules/MonkModule'
 
 import * as routes from './routes'
 import * as sockets from './sockets'
@@ -44,21 +44,26 @@ import { SocketedChow } from './SocketedChow'
     // Add routes to our endpoints
     chow.applyRoutes((app, r) => {
       app.get('/', r(routes.hello))
-      app.get('/projects', r(routes.projects))
-      app.get('/browse', r(routes.browse))
+      app.get('/cards', r(routes.listCards))
+      app.get('/labels', r(routes.listLabels))
       app.get('/content', r(routes.content))
       app.get('/stats', r(routes.stats))
 
       if (process.env.NODE_ENV === 'development') {
+        app.get('/dev/errors', r(routes.devErrors))
         app.get('/dev/stats', r(routes.devStats))
+        app.get('/dev/searches', r(routes.devSearches))
       }
-      // app.get('/events', r(routes.events))
     })
 
     // Setup the web socket server
-    chow.registerSocket('echo', sockets.echo)
-    chow.registerSocket('page_view', sockets.pageView)
-    chow.registerSocket('project_action', sockets.projectAction)
+    if (process.env.ENABLE_SOCKETS) {
+      chow.registerSocket('echo', sockets.echo)
+      chow.registerSocket('page_view', sockets.pageView)
+      chow.registerSocket('project_action', sockets.projectAction)
+      chow.registerSocket('client_error', sockets.clientError)
+      chow.registerSocket('search_action', sockets.searchAction)
+    }
 
     // Start the app up
     await chow.start()
