@@ -1,4 +1,4 @@
-import { RouteContext } from '../types'
+import { RouteContext } from '../../types'
 
 //
 // GET /dev/stats ~ Get all analytics stats (only NODE_ENV=development)

@@ -22,6 +22,11 @@ export const ProjectActionBody = struct({
   link: 'string'
 })
 
+export const SearchActionBody = struct({
+  search: 'string',
+  filters: struct.record(['string', struct.array(['string'])])
+})
+
 /** Validate an object against a superstruct schema, throwing any errors */
 export function validate<T>(type: Struct, body: any): T {
   const [error, data] = type.validate(body)

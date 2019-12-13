@@ -73,3 +73,8 @@ export interface ProjectAction {
   project: string
   link: string
 }
+
+export interface SearchAction {
+  search: string
+  filters: Record<string, string[]>
+}
