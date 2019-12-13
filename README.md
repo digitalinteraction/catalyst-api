@@ -249,7 +249,10 @@ Any message with unknown type or incorrect body is silently ignored.
 
 ## Future work
 
-> Coming soon
+- Move public mirror to `digitalinteraction/catalyst-api`
+- Push docker images to dockerhub
+- Use [conventionalcommits](https://www.conventionalcommits.org/en/v1.0.0/)
+  and setup [commitlint](https://www.npmjs.com/package/@commitlint/cli)
 
 ---
 
