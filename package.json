@@ -11,6 +11,7 @@
     "lint": "npx tsc --noEmit",
     "coverage": "jest --coverage",
     "preversion": "npm run lint && npm test -s",
+    "postversion": "git push --follow-tags",
     "prettier": "prettier --write '**/*.{js,ts,tsx,json,css,md}'",
     "start": "node -r dotenv/config dist/server.js",
     "test": "jest",
