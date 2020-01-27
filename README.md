@@ -32,8 +32,9 @@ It serves data from a [redis](https://redis.io/) database, which is put there by
 
 ## What is this
 
-This repo provides a http API to fetch projects and generate browsing methods.
-Projects are retrieved from a redis instances and are sent to the client as JSON.
+This repo provides a http API to fetch projects from a redis cache
+which have been put there by [unplatform/catalyst-trello-scraper](https://github.com/unplatform/catalyst-trello-scraper).
+Cards are retrieved from a redis instances and are sent to the client as JSON.
 Lightweight analytics are written to a mongo database.
 
 The endpoints follow a meta-data envelope, where `data` is the endpoint payload:
@@ -50,6 +51,78 @@ The endpoints follow a meta-data envelope, where `data` is the endpoint payload:
   "data": { "msg": "Hey!" }
 }
 ```
+
+## Usage
+
+This repo generates a Docker image which runs the node.js server on port `3000`.
+
+Here's an example with docker-compose:
+
+```yml
+version: '3'
+
+services:
+  node-api:
+    image: openlab.ncl.ac.uk:4567/catalyst/node-api:0.2.0
+    restart: unless-stopped
+    ports:
+      - 3000:3000
+    environment:
+      WEB_URL: https://catalyst.not-equal.tech
+      REDIS_URL: redis://your_redis_url
+      MONGO_URL: mongodb://your_mongo_url
+      LOG_LEVEL: info
+```
+
+### Environment variables
+
+There are some required and some option environment variables, shown below.
+
+| Variable       | Description                                                |
+| -------------- | ---------------------------------------------------------- |
+| WEB_URL        | **required** Where the web ui is, used to set cors headers |
+| REDIS_URL      | **required** The connection details of the redis database  |
+| MONGO_URL      | **required** The connection details of the mongo database  |
+| LOG_LEVEL      | (optional) How much logging to generate                    |
+| ENABLE_SOCKETS | (optional) Enable the websocket analytics server           |
+
+> For information about LOG_LEVEL see [chowchow-logger](https://github.com/robb-j/chowchow-logger#environment-variables).
+> Logs are written to `/app/logs` which is an internal volume by default,
+> You can bind those logs to the host machine if you want.
+
+### Endpoints
+
+There are 5 endpoints
+
+| Route           | Description                                       |
+| --------------- | ------------------------------------------------- |
+| `GET: /`        | An endpoint to let you know everything is working |
+| `GET: /cards`   | Retrieve cards from the redis database            |
+| `GET: /labels`  | Get the labels which can be filtered by           |
+| `GET: /content` | Retrieve site config from the redis database      |
+| `GET: /stats`   | Get analytics stats about site usage              |
+
+There are also development endpoints when `NODE_ENV=development`
+
+| Route                | Description                                 |
+| -------------------- | ------------------------------------------- |
+| `GET: /dev/errors`   | Get errors that have happened in the webapp |
+| `GET: /dev/stats`    | Get raw stats                               |
+| `GET: /dev/searches` | Get searches that have occured              |
+
+### Sockets
+
+The site uses sockets for anonymous analytics.
+A JSON payload is expected with a root level `type` which is used to route the socket to a handler.
+Any message with unknown type or incorrect body is silently ignored.
+
+| Type             | Description                                                |
+| ---------------- | ---------------------------------------------------------- |
+| `echo`           | A test socket which echo's back your body (sans type)      |
+| `page_view`      | Register a page was viewed, params: `path`                 |
+| `project_action` | Register an action on a project, params: `project`, `link` |
+| `client_error`   | Tell the API about an error, params: `message`, `stack`    |
+| `search_action`  | Register a user search, params: `search`, `filters`        |
 
 ## Development
 
@@ -120,6 +193,13 @@ npm run build
 npm run start
 ```
 
+### Commits
+
+All commits to this repo must follow [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/).
+This ensures changes are structured and means the [CHANGELOG.md](/CHANGELOG.md) can be automatically generated.
+
+This standard is enforced through a `commit-msg` hook using [yorkie](https://www.npmjs.com/package/yorkie).
+
 ### Code Structure
 
 | Folder       | Contents                                     |
@@ -176,83 +256,20 @@ It pushes these docker images to the GitLab registry of the repo.
 A slight nuance is that it will replace a preceding `v` in tag names, formatting `v1.0.0` to `1.0.0`.
 
 ```bash
-# Deploy a new version of the CLI
-npm version # major | minor | patch
-git push --tags
-open https://openlab.ncl.ac.uk/gitlab/catalyst/node-api/pipelines
+# Generate a new release
+# -> Generates a new version based on the commits since the last version
+# -> Generates the CHANGELOG.md based on those commits
+# -> There is a "preversion" script to lint & run tests
+npm run release
+
+# Push the new version
+# -> The GitLab CI will build a new docker image for it
+git push --follow-tags
 ```
-
-### Using the image
-
-With this docker image you can easily deploy and run the API using docker-compose.
-The API runs on port `3000` inside its container, so you'll need to map that for external traffic.
-
-Here's an example with docker-compose:
-
-> For more info see [catalyst-example-stack](https://github/com/unplatform/catalyst-example-stack)
-
-```yml
-version: '3'
-
-services:
-  node-api:
-    image: openlab.ncl.ac.uk:4567/catalyst/node-api:0.2.0
-    restart: unless-stopped
-    ports:
-      - 3000:3000
-    environment:
-      WEB_URL: https://catalyst.not-equal.tech
-      REDIS_URL: redis://your_redis_url
-      MONGO_URL: mongodb://your_mongo_url
-      LOG_LEVEL: info
-```
-
-### Environment variables
-
-There are some required and some option environment variables, shown below.
-
-| Variable       | Description                                                |
-| -------------- | ---------------------------------------------------------- |
-| WEB_URL        | **required** Where the web ui is, used to set cors headers |
-| REDIS_URL      | **required** The connection details of the redis database  |
-| MONGO_URL      | **required** The connection details of the mongo database  |
-| LOG_LEVEL      | (optional) How much logging to generate                    |
-| ENABLE_SOCKETS | (optional) Enable the websocket analytics server           |
-
-> For information about LOG_LEVEL see [chowchow-logger](https://github.com/robb-j/chowchow-logger#environment-variables).
-> Logs are written to `/app/logs` which is an internal volume by default,
-> You can bind those logs to the host machine if you want.
-
-### Endpoints
-
-There are 5 endpoints
-
-| Route            | Description                                       |
-| ---------------- | ------------------------------------------------- |
-| `GET: /`         | An endpoint to let you know everything is working |
-| `GET: /projects` | Retrieve projects from the redis database         |
-| `GET: /browse`   | Generate browsing modes, populated with projects  |
-| `GET: /content`  | Retrieve site config from the redis database      |
-| `GET: /stats`    | Get analytics stats about site usage              |
-
-### Sockets
-
-The site uses sockets for anonymous analytics.
-A JSON payload is expected with a root level `type` which is used to route the socket to a handler.
-Any message with unknown type or incorrect body is silently ignored.
-
-| Type             | Description                                                |
-| ---------------- | ---------------------------------------------------------- |
-| `echo`           | A test socket which echo's back your body (sans type)      |
-| `page_view`      | Register a page was viewed, params: `path`                 |
-| `project_action` | Register an action on a project, params: `project`, `link` |
 
 ## Future work
 
-- Move public mirror to `digitalinteraction/catalyst-api`
 - Push docker images to dockerhub
-- Use [conventionalcommits](https://www.conventionalcommits.org/en/v1.0.0/)
-  and setup [commitlint](https://www.npmjs.com/package/@commitlint/cli)
 
 ---
 
