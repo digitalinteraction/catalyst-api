@@ -1,4 +1,5 @@
 export { default as content } from './content'
+export { default as health } from './health'
 export { default as devStats } from './dev/dev-stats'
 export { default as devErrors } from './dev/dev-errors'
 export { default as devSearches } from './dev/dev-searches'

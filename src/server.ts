@@ -48,6 +48,7 @@ import { SocketedChow } from './SocketedChow'
       app.get('/labels', r(routes.listLabels))
       app.get('/content', r(routes.content))
       app.get('/stats', r(routes.stats))
+      app.get('/health', r(routes.health))
 
       if (process.env.NODE_ENV === 'development') {
         app.get('/dev/errors', r(routes.devErrors))

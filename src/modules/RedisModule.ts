@@ -7,6 +7,7 @@ export type RedisContext = {
 }
 
 interface RedisAsyncClient {
+  isConnected(): boolean
   get(key: string): Promise<string>
   set(key: string, value: string): Promise<void>
   getJson<T = any>(key: string): Promise<T>
@@ -26,9 +27,10 @@ export class RedisModule implements Module {
     const client = createClient(url)
 
     return {
+      isConnected: () => client.connected,
       get: promisify(client.get).bind(client),
-      set: promisify(client.set).bind(client),
-      quit: promisify(client.quit).bind(client),
+      set: promisify(client.set).bind(client) as any,
+      quit: promisify(client.quit).bind(client) as any,
       on: client.on.bind(client),
       async getJson(key: string) {
         const data: any = await new Promise((resolve, reject) => {
@@ -36,7 +38,7 @@ export class RedisModule implements Module {
         })
         return JSON.parse(data)
       }
-    } as any
+    }
   }
 
   checkEnvironment(): void {}
