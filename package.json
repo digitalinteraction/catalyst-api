@@ -1,7 +1,7 @@
 {
   "name": "@openlab/catalyst-node-api",
   "private": true,
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "A ChowChow API to serve projects over HTTP using JSON",
   "repository": "unplatform/catalyst-node-api",
   "author": "Rob Anderson (https://r0b.io)",
