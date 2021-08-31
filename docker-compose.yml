@@ -26,7 +26,7 @@ services:
 
   # Run the scraper once at startup
   one-time-scraper:
-    image: openlab.ncl.ac.uk:4567/catalyst/trello-scraper:v1.0.1
+    image: ghcr.io/digitalinteraction/catalyst-trello-scraper
     env_file: .env
     depends_on:
       - redis
