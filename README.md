@@ -63,7 +63,7 @@ version: '3'
 
 services:
   node-api:
-    image: openlab.ncl.ac.uk:4567/catalyst/node-api:0.2.0
+    image: ghcr.io/digitalinteraction/catalyst-api
     restart: unless-stopped
     ports:
       - 3000:3000
@@ -73,6 +73,8 @@ services:
       MONGO_URL: mongodb://your_mongo_url
       LOG_LEVEL: info
 ```
+
+> Get the [latest version](https://github.com/digitalinteraction/catalyst-api/pkgs/container/catalyst-api)
 
 ### Environment variables
 
