@@ -38,7 +38,7 @@
     "monk": "^6.0.6",
     "redis": "^2.8.0",
     "shuffle-array": "^1.0.1",
-    "superstruct": "^0.8.2",
+    "superstruct": "^0.8.3",
     "utf-8-validate": "^5.0.2",
     "uuid": "^3.3.3",
     "valid-env": "^0.1.3",
