@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.1.2](https://github.com/digitalinteraction/catalyst-api/compare/v1.1.1...v1.1.2) (2021-08-31)
+
+### Bug Fixes
+
+- fix broken superstruct dep ([53d88d2](https://github.com/digitalinteraction/catalyst-api/commit/53d88d2e4adf96ca307a9f41b728b8e547fb587e))
+
 ## [1.1.0](https://github.com/unplatform/catalyst-node-api/compare/v1.0.1...v1.1.0) (2020-02-03)
 
 ### Features
