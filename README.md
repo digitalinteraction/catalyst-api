@@ -271,8 +271,4 @@ git push --follow-tags
 
 ## Future work
 
-- Push docker images to dockerhub
-
----
-
-> The code on https://github.com/unplatform/catalyst-node-api is a mirror of https://openlab.ncl.ac.uk/gitlab/catalyst/node-api
+- n/a
